@@ -1,22 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+import os,sys
 
 #make programs
 
 
-os.system('make')
+error = os.system('make')
+if error:
+    print 'make funket ikke'
+    sys.exit(1)
 
 run = './ODEsolver.x'
-os.system(run)
+error = os.system(run)
+if error:
+    print 'runtime error'
+    sys.exit(1)
 
 #Fetch simulation
 system = np.loadtxt('system.dat')
-x = system[0,:]
-y =system[2,:]
+verlet = np.loadtxt('verlet.dat')
 
 
 #Plot data 
-plt.plot(x,y,'-')
+plt.figure()
+plt.plot(system[0,:],system[2,:],'-')
+plt.title('rk4')
+plt.figure()
+plt.plot(verlet[0,:],verlet[1,:],'-')
+plt.title('verlet')
 plt.show()
 

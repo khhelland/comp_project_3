@@ -5,12 +5,12 @@
 using namespace std;
 using namespace arma;
 
-double _pi = atan(1)*4;
+const double _pi = atan(1)*4;
+const double _G = 4*_pi*_pi;
 
+// vec derivatives(vec X, double t);
 
-vec derivatives(vec X, double t);
-
-void rk4solver(mat &u, vec t, double h)
+void rk4solver(mat &u, vec t, double h, vec (*derivatives)(vec,double))
 {
   double h2 = h/2;
   double h6 = h/6;
@@ -27,11 +27,11 @@ void rk4solver(mat &u, vec t, double h)
 }
 
 
-void verlet(mat &u, vec t, vec (*dderiv)(vec,double), double h, vec v0)
+void verlet(mat &u, vec t, double h, vec v0,  vec (*dderiv)(vec,double))
 {
   
   u.col(1) = u.col(0) + v0*h + 0.5*h*h*dderiv(u.col(0),t(0));
-  for (int i = 1; i < u.n_cols - 1; i++)
+  for (int i = 1; i < (u.n_cols-1); i++)
     { u.col(i+1) = 2*u.col(i) - u.col(i-1) + h*h*dderiv(u.col(i),t(i));}
 }
 
@@ -49,11 +49,25 @@ vec derivatives(vec X, double t)
   return k;
 }
 
+vec doublederivatives(vec X, double t)
+{
+  //x is on form x,y
+  int n = X.n_elem;
+  vec k(n);
+  
+  k(0) = -(4*_pi*_pi/pow((X(0)*X(0) + X(1)*X(1)),1.5))*X(0);
+  k(1) = -(4*_pi*_pi/pow((X(0)*X(0) + X(1)*X(1)),1.5))*X(1);
+  
+  return k;
+}
+
+
 
 int main()
 {
   int n = 100;
   mat system(4,n);
+  mat verletsystem(2,n);
   
   double h = 1.0/(n-1);
   vec time(n);
@@ -66,9 +80,18 @@ int main()
   system(2,0) = 0;
   system(3,0) = 2*_pi;
   
-  rk4solver(system, time, h);
-
+  //verlet inits
+  verletsystem(0,0) = 1;
+  verletsystem(1,0) = 0;
+  vec v0(2);
+  v0(0) = 0;
+  v0(1) = 2*_pi;
+  
+  rk4solver(system, time, h, *derivatives);
   system.save("system.dat",raw_ascii);
+  
+  verlet(verletsystem,time, h,v0, *doublederivatives); 
+  verletsystem.save("verlet.dat",raw_ascii);
   
 
   return 0;
