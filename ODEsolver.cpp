@@ -1,7 +1,7 @@
 #include <armadillo>
 #include <cstdlib>
 #include <cmath>
-
+#include "ODEsolver.h"
 using namespace std;
 using namespace arma;
 
@@ -10,30 +10,40 @@ const double _G = 4*_pi*_pi;
 
 // vec derivatives(vec X, double t);
 
-void rk4solver(mat &u, vec t, double h, vec (*derivatives)(vec,double))
+ODEsolver::ODEsolver(mat U, vec t, double h)
+{
+  //skal U kjennes ved referanse eller verdi?
+  // verdi paser best?
+  this->U = U;
+  this->t = t;
+  this->h = h;
+}
+
+void ODEsolver::rk4solve(vec (*derivatives)(vec,double))
 {
   double h2 = h/2;
   double h6 = h/6;
   vec k1,k2,k3,k4;
-  for (int i = 0; i < u.n_cols-1; i++)
+  for (int i = 0; i < U.n_cols-1; i++)
     {
-      k1 = derivatives(u.col(i),t(i));
-      k2 = derivatives(u.col(i)+h2*k1,t(i)+h2);
-      k3 = derivatives(u.col(i)+h2*k2,t(i)+h2);
-      k4 = derivatives(u.col(i)+h*k3,t(i)+h);
+      k1 = derivatives(U.col(i),t(i));
+      k2 = derivatives(U.col(i)+h2*k1,t(i)+h2);
+      k3 = derivatives(U.col(i)+h2*k2,t(i)+h2);
+      k4 = derivatives(U.col(i)+h*k3,t(i)+h);
       
-      u.col(i+1) = u.col(i) + h6*(k1 + 2*k2 + 2*k3 +k4);
+      U.col(i+1) = U.col(i) + h6*(k1 + 2*k2 + 2*k3 +k4);
     }
 }
 
 
-void verlet(mat &u, vec t, double h, vec v0,  vec (*dderiv)(vec,double))
+void ODEsolver::verlet( vec v0,  vec (*dderiv)(vec,double))
 {
-  
-  u.col(1) = u.col(0) + v0*h + 0.5*h*h*dderiv(u.col(0),t(0));
-  for (int i = 1; i < (u.n_cols-1); i++)
-    { u.col(i+1) = 2*u.col(i) - u.col(i-1) + h*h*dderiv(u.col(i),t(i));}
+   U.col(1) = U.col(0) + v0*h + 0.5*h*h*dderiv(U.col(0),t(0));
+  for (int i = 1; i < (U.n_cols-1); i++)
+    { U.col(i+1) = 2*U.col(i) - U.col(i-1) + h*h*dderiv(U.col(i),t(i));}
 }
+
+
 
 vec derivatives(vec X, double t)
 {
@@ -65,6 +75,7 @@ vec doublederivatives(vec X, double t)
 
 int main()
 {
+  //dette passer ikke lenger:
   int n = 100;
   mat system(4,n);
   mat verletsystem(2,n);
