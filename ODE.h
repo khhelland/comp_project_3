@@ -1,21 +1,21 @@
 #pragma once
-#include armadillo
+#include <armadillo>
 
 using namespace arma;
 //Solver for system of coupled ODEs
 // dUdt = F(U,t)
 
 
-class ODEsolver
+class ODE
 {
  public:
-  ODEsolver(){}
-  ODEsolver(mat, vec, double);
+  ODE(){}
+  ODE(mat, vec, double);
   mat U;
   vec t;
   double h;
   void rk4(vec (*derivatives)(vec,double));
   void verlet(vec v0, vec (*doublederivatives)(vec, double));
-  void set_init(vec init){U.col(0) = init}
+  void set_init(vec init){U.col(0) = init;}
 };
             

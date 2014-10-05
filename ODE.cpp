@@ -1,7 +1,7 @@
 #include <armadillo>
 #include <cstdlib>
 #include <cmath>
-#include "ODEsolver.h"
+#include "ODE.h"
 using namespace std;
 using namespace arma;
 
@@ -10,7 +10,7 @@ const double _G = 4*_pi*_pi;
 
 // vec derivatives(vec X, double t);
 
-ODEsolver::ODEsolver(mat U, vec t, double h)
+ODE::ODE(mat U, vec t, double h)
 {
   //skal U kjennes ved referanse eller verdi?
   // verdi paser best?
@@ -19,7 +19,7 @@ ODEsolver::ODEsolver(mat U, vec t, double h)
   this->h = h;
 }
 
-void ODEsolver::rk4solve(vec (*derivatives)(vec,double))
+void ODE::rk4(vec (*derivatives)(vec,double))
 {
   double h2 = h/2;
   double h6 = h/6;
@@ -36,7 +36,7 @@ void ODEsolver::rk4solve(vec (*derivatives)(vec,double))
 }
 
 
-void ODEsolver::verlet( vec v0,  vec (*dderiv)(vec,double))
+void ODE::verlet( vec v0,  vec (*dderiv)(vec,double))
 {
    U.col(1) = U.col(0) + v0*h + 0.5*h*h*dderiv(U.col(0),t(0));
   for (int i = 1; i < (U.n_cols-1); i++)
@@ -85,24 +85,44 @@ int main()
   for(int i = 0; i<n; i++)
     { time(i) = i*h; }
   
-  //initial conditions
-  system(0,0) = 1;
-  system(1,0) = 0;
-  system(2,0) = 0;
-  system(3,0) = 2*_pi;
+  // //initial conditions
+  // system(0,0) = 1;
+  // system(1,0) = 0;
+  // system(2,0) = 0;
+  // system(3,0) = 2*_pi;
   
-  //verlet inits
-  verletsystem(0,0) = 1;
-  verletsystem(1,0) = 0;
+  vec sys_init(4);
+  sys_init(0) = 1;
+  sys_init(1) = 0;
+  sys_init(2) = 0;
+  sys_init(3) = 2*_pi;
+  
+  // //verlet inits
+  // verletsystem(0,0) = 1;
+  // verletsystem(1,0) = 0;
+  
+  //finn ut om initializer lists
+  vec ver_init(2);
+  ver_init(0) = 1;
+  ver_init(1) = 0;
   vec v0(2);
   v0(0) = 0;
   v0(1) = 2*_pi;
+
+  ODE sys(system,time,h);
+  ODE ver(verletsystem,time,h);
   
-  rk4solver(system, time, h, *derivatives);
-  system.save("system.dat",raw_ascii);
+  sys.set_init(sys_init);
+  ver.set_init(ver_init);
   
-  verlet(verletsystem,time, h,v0, *doublederivatives); 
-  verletsystem.save("verlet.dat",raw_ascii);
+  sys.rk4(*derivatives);
+  ver.verlet(v0,*doublederivatives);
+  
+  //rk4solver(system, time, h, *derivatives);
+  sys.U.save("system.dat",raw_ascii);
+  
+  //verlet(verletsystem,time, h,v0, *doublederivatives); 
+  ver.U.save("verlet.dat",raw_ascii);
   
 
   return 0;
