@@ -10,7 +10,7 @@ if error:
     print 'make funket ikke'
     sys.exit(1)
 
-run = './ODEsolver.x'
+run = './main.x'
 error = os.system(run)
 if error:
     print 'runtime error'
