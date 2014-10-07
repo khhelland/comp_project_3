@@ -11,6 +11,8 @@ using namespace arma;
 class solarsystem
 {
  public:
+  //tror systemet kan bestaa av mange planeter
+  //og en ODE
   solarsystem(){}
   vector<planet>  planets;
   vec init;
@@ -32,5 +34,7 @@ class solarsystem
   void use_rk4(int); //kanskje kan disse bli til en?
   void use_verlet(int);
   void reset();
+  void simulate();
+  void simulate(double T);
   
 };

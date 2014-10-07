@@ -1,7 +1,10 @@
 #include <armadillo>
-#include <cstdlib>
+//#include <cstdlib>
 #include <cmath>
+#include <fstream>
+#include <iomanip>
 #include "ODE.h"
+
 using namespace std;
 using namespace arma;
 
@@ -10,36 +13,53 @@ const double _G = 4*_pi*_pi;
 
 // vec derivatives(vec X, double t);
 
-ODE::ODE(mat U, vec t, double h)
-{
-  //skal U kjennes ved referanse eller verdi?
-  // verdi paser best?
-  this->U = U;
-  this->t = t;
-  this->h = h;
-}
+ODE::ODE(vec S, int n, double d):
+  state(S),  N(n), h(d) 
+{ t = 0;}
 
-void ODE::rk4(vec (*derivatives)(vec,double))
+void ODE::rk4(vec (*derivatives)(vec,double), char* outfile)
 {
+  ofstream outf(outfile); 
+    
   double h2 = h/2;
   double h6 = h/6;
   vec k1,k2,k3,k4;
-  for (int i = 0; i < U.n_cols-1; i++)
+  
+  outf<<state.t();
+  while (t<h*N)
     {
-      k1 = derivatives(U.col(i),t(i));
-      k2 = derivatives(U.col(i)+h2*k1,t(i)+h2);
-      k3 = derivatives(U.col(i)+h2*k2,t(i)+h2);
-      k4 = derivatives(U.col(i)+h*k3,t(i)+h);
+      k1 = derivatives(state,t);
+      k2 = derivatives(state+h2*k1,t+h2);
+      k3 = derivatives(state+h2*k2,t+h2);
+      k4 = derivatives(state+h*k3,t+h);
       
-      U.col(i+1) = U.col(i) + h6*(k1 + 2*k2 + 2*k3 +k4);
+      state +=  h6*(k1 + 2*k2 + 2*k3 +k4);
+      
+      outf<<state.t();
+      t+=h;
     }
 }
 
 
-void ODE::verlet( vec v0,  vec (*dderiv)(vec,double))
+void ODE::verlet( vec v0,  vec (*dderiv)(vec,double), char* outfile)
 {
-   U.col(1) = U.col(0) + v0*h + 0.5*h*h*dderiv(U.col(0),t(0));
-  for (int i = 1; i < (U.n_cols-1); i++)
-    { U.col(i+1) = 2*U.col(i) - U.col(i-1) + h*h*dderiv(U.col(i),t(i));}
+  ofstream outf(outfile);
+
+  vec laststate,nextstate;
+  laststate = state;
+  
+  outf<<state.t();
+  state = laststate + v0*h + 0.5*h*h*dderiv(laststate,t);
+  outf<<state.t();
+  while (t<h*N)
+    { 
+      nextstate = 2*state - laststate + h*h*dderiv(state,t);
+      
+      laststate = state;
+      state = nextstate;
+      
+      outf<<state.t();
+      t+=h;
+    }
 }
 

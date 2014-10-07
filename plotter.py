@@ -23,10 +23,10 @@ verlet = np.loadtxt('verlet.dat')
 
 #Plot data 
 plt.figure()
-plt.plot(system[0,:],system[2,:],'-')
+plt.plot(system[:,0],system[:,2],'-')
 plt.title('rk4')
 plt.figure()
-plt.plot(verlet[0,:],verlet[1,:],'-')
+plt.plot(verlet[:,0],verlet[:,1],'-')
 plt.title('verlet')
 plt.show()
 

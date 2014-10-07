@@ -10,12 +10,12 @@ class ODE
 {
  public:
   ODE(){}
-  ODE(mat, vec, double);
-  mat U;
-  vec t;
+  ODE(vec, int, double);
+  vec state;
+  double t;
+  int N;
   double h;
-  void rk4(vec (*derivatives)(vec,double));
-  void verlet(vec v0, vec (*doublederivatives)(vec, double));
-  void set_init(vec init){U.col(0) = init;}
+  void rk4(vec (*derivatives)(vec,double),char*);
+  void verlet(vec v0, vec (*doublederivatives)(vec, double),char*);
 };
             
