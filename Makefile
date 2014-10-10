@@ -9,7 +9,7 @@ LINKERFLAGS = -larmadillo
 
 PROJECT = main.x
 
-obj = main.o ODE.o solarsystem.o
+obj = main.o solarsystem.o
 COMPILER = g++
 
 default: $(PROJECT)
