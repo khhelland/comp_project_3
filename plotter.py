@@ -18,15 +18,15 @@ if error:
 
 #Fetch simulation
 system = np.loadtxt('system.dat')
-verlet = np.loadtxt('verlet.dat')
+# verlet = np.loadtxt('verlet.dat')
 
 
 #Plot data 
 plt.figure()
 plt.plot(system[:,0],system[:,2],'-')
 plt.title('rk4')
-plt.figure()
-plt.plot(verlet[:,0],verlet[:,1],'-')
-plt.title('verlet')
-plt.show()
+# plt.figure()
+# plt.plot(verlet[:,0],verlet[:,1],'-')
+# plt.title('verlet')
+# plt.show()
 

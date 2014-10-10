@@ -13,9 +13,8 @@ const double _G = 4*_pi*_pi;
 
 // vec derivatives(vec X, double t);
 
-ODE::ODE(vec S, int n, double d):
-  state(S),  N(n), h(d) 
-{ t = 0;}
+ODE::ODE(vec S, double Time, double d):
+  state(S),  T(Time), h(d) {}
 
 void ODE::rk4(vec (*derivatives)(vec,double), char* outfile)
 {
@@ -26,7 +25,7 @@ void ODE::rk4(vec (*derivatives)(vec,double), char* outfile)
   vec k1,k2,k3,k4;
   
   outf<<state.t();
-  while (t<h*N)
+  while (t<T)
     {
       k1 = derivatives(state,t);
       k2 = derivatives(state+h2*k1,t+h2);
@@ -51,7 +50,7 @@ void ODE::verlet( vec v0,  vec (*dderiv)(vec,double), char* outfile)
   outf<<state.t();
   state = laststate + v0*h + 0.5*h*h*dderiv(laststate,t);
   outf<<state.t();
-  while (t<h*N)
+  while (t<T)
     { 
       nextstate = 2*state - laststate + h*h*dderiv(state,t);
       

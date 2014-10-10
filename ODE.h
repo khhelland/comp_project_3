@@ -10,10 +10,10 @@ class ODE
 {
  public:
   ODE(){}
-  ODE(vec, int, double);
+  ODE(vec, double, double);
   vec state;
-  double t;
-  int N;
+  double t=0;
+  double T ;
   double h;
   void rk4(vec (*derivatives)(vec,double),char*);
   void verlet(vec v0, vec (*doublederivatives)(vec, double),char*);

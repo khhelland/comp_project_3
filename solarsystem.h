@@ -8,33 +8,23 @@ using namespace arma;
 //Class for modeling
 //solarsystem
 
-class solarsystem
+class solarsystem: public ODE
 {
  public:
   //tror systemet kan bestaa av mange planeter
   //og en ODE
   solarsystem(){}
-  vector<planet>  planets;
+  std::vector<planet>  planets;
   vec init;
-  double T;
-  char* method;
-  int rk4 = 1;
-  int verlet = 0;
-  //maybe change ODE so that U is here
-  //also let user decide if U shoulf be 
-  //held in memory, or let it not be with no option
-  mat states;
-  vec state;
   
-  solarsystem(int);//argument is number of "planets"
-  solarsystem(vector<planet>);//
-  vec derivatives(vec,double);
-  vec doublederivatives(vec,double);
+      
+  /* solarsystem(int);//argument is number of "planets" */
+  /* solarsystem(vector<planet>);// */
+  static vec derivatives(vec,double);
+  static vec doublederivatives(vec,double);
   void add_planet(planet);
-  void use_rk4(int); //kanskje kan disse bli til en?
-  void use_verlet(int);
   void reset();
-  void simulate();
-  void simulate(double T);
+  void do_rk4(char*);
+  void do_verlet(char*);
   
 };
