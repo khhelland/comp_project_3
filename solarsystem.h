@@ -25,6 +25,7 @@ class solarsystem
   arma::vec doublederivatives(arma::vec);
   void add_planet(planet);
   void initialize();
+  void update_planets();
   void reset();
   
   

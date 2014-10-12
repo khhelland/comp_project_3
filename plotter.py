@@ -23,7 +23,11 @@ system = np.loadtxt('system.dat')
 
 #Plot data 
 plt.figure()
-plt.plot(system[:,0],system[:,1],'-')
+plt.hold(1)
+
+for i in range((len(system[0,:])/4)):
+    plt.plot(system[:,4*i],system[:,4*i+1],'-')
+#plt.plot(system[:,0],system[:,1],'-',system[:,4],system[:,5],'-')
 plt.title('rk4')
 # plt.figure()
 # plt.plot(verlet[:,0],verlet[:,1],'-')
