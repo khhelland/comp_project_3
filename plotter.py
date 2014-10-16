@@ -17,18 +17,28 @@ if error:
     sys.exit(1)
 
 #Fetch simulation
-system = np.loadtxt('system.dat')
-# verlet = np.loadtxt('verlet.dat')
+rk4 = np.loadtxt('rk4.dat')
+verlet = np.loadtxt('verlet.dat')
 
 
 #Plot data 
 plt.figure()
 plt.hold(1)
 
-for i in range((len(system[0,:])/4)):
-    plt.plot(system[:,4*i],system[:,4*i+1],'-')
-#plt.plot(system[:,0],system[:,1],'-',system[:,4],system[:,5],'-')
+for i in range((len(rk4[0,:])/4)):
+    plt.plot(rk4[:,4*i],rk4[:,4*i+1],'-')
 plt.title('rk4')
+
+
+
+plt.figure()
+plt.hold(1)
+
+for i in range((len(verlet[0,:])/2)):
+    plt.plot(verlet[:,2*i],verlet[:,2*i+1],'-')
+plt.title('verlet')
+
+
 # plt.figure()
 # plt.plot(verlet[:,0],verlet[:,1],'-')
 # plt.title('verlet')
