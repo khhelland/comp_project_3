@@ -1,5 +1,3 @@
-#Dette er makefilen for ODEsolver.cpp
-
 COMPILEFLAGS = -O3
 #LIBDIR = -L/usr/libs
 LIBDIR = 

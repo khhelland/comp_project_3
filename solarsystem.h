@@ -3,27 +3,26 @@
 #include <vector>
 #include "planet.h"
 
-//Class for modeling
-//solarsystem
+//Class for modeling solarsystem
 
 class solarsystem
 {
-private:
-  void update_planets();
-
 public:
   solarsystem(): t(0), use_verlet(0), sun_in_origin(0) {}
-  std::vector<planet>  planets;
-  arma::vec init;
-  arma::vec state;
-  double t;
-  double T ;
-  double h;
   
+  //properties
+  std::vector<planet>  planets;
+  arma::vec init; //initial state vector
+  arma::vec state;
+  double t; //current time
+  double T; //total time
+  double h; //timestep
+
+  //options:
   bool use_verlet;
- 
   bool sun_in_origin;
   
+  //methods
   void rk4(const char*);
   void verlet(const char*);
   arma::vec derivatives(arma::vec);
@@ -32,4 +31,7 @@ public:
   void initialize();
   void reset();
   void simulate(const char*);
+  void update_planets();
+
+
 };

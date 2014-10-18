@@ -12,6 +12,8 @@ public:
   arma::vec position;
   arma::vec velocity;
   double mass;
+  
+  //3D:
   planet(double m, double x, double y, double z, double vx, double vy, double vz)   
   {
     mass = m;
@@ -25,6 +27,7 @@ public:
     velocity(2) = vz;        
   }
 
+  //2D:
   planet(double m, double x, double y, double vx, double vy)
   {
     mass = m;
