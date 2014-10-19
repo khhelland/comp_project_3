@@ -16,7 +16,7 @@ int main()
   
   circular.sun_in_origin = 1;
   
-  circular.h = 0.001;
+  circular.h = 1e-3;
   circular.T = 50;
   
   circular.initialize();
@@ -24,6 +24,7 @@ int main()
   
   circular.reset();
   circular.use_verlet = 1;
+  //circular.h = e-3;
   circular.simulate("circular_verlet.dat");
   
   return 0;

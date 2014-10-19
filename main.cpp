@@ -32,7 +32,7 @@ int main()
   sys.add_planet(mars);
   
    
-  planet jupiter(9.54*pow(10,-4),-3.195948618635423344e+00, 4.215460718186131217e+00,
+  planet jupiter(1*9.54*pow(10,-4),-3.195948618635423344e+00, 4.215460718186131217e+00,
                  -2.231558133501658769e+00, -1.536277437379472310e+00);
   sys.add_planet(jupiter);
 
@@ -67,7 +67,7 @@ int main()
   
 
   sys.h = 0.001;  //timestep (in years)
-  sys.T = 50;     //simulated time (in years)
+  sys.T = 500;     //simulated time (in years)
   
   sys.initialize();
   //perform simulation with rk4 integration
